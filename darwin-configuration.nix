@@ -73,6 +73,20 @@ in {
       allowInsecure = false;
       allowUnsupportedSystem = false;
     };
+    overlays = [
+      (self: super: {
+        zsh-prezto = super.zsh-prezto.overrideAttrs (old: {
+          version = "2022-03-13-akanter-zprofile-fix";
+          src = pkgs.fetchFromGitHub {
+            owner = "akanter";
+            repo = "prezto";
+            rev = "40d83cb2f9c14783d47e3a2459b1a0e513709667";
+            sha256 = "t/FQz6xnSEAr0xA1xvzNlZClc05kaXFv9RLANfWJKoE=";
+            fetchSubmodules = true;
+          };
+        });
+      })
+    ];
   };
 
   nix.trustedUsers = [ "ak" "@admin" ];
