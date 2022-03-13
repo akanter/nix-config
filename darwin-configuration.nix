@@ -108,8 +108,9 @@ in {
         enable = true;
         history.size = 50000;
         shellAliases = {
-          ec = "${pkgs.emacs}/bin/emacsclient";
+          ec = "${pkgs.emacs}/bin/emacsclient -ct";
           g = "${pkgs.git}/bin/git";
+          gco = "g checkout";
           la = "ls -la";
         };
         prezto = {
@@ -132,7 +133,7 @@ in {
              }" "${config.users.users.ak.home}/Library/KeyBindings/DefaultKeyBinding.dict"
         '';
       home.sessionVariables = {
-        EDITOR = "${pkgs.emacs}/bin/emacsclient";
+        EDITOR = "${pkgs.emacs}/bin/emacsclient -ct";
         VISUAL = "$EDITOR";
       };
       programs.git = {
@@ -147,19 +148,21 @@ in {
           cp = "cherry-pick";
           ds = "diff --stat";
           ri = "rebase --interactive";
+          sl =
+            "log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%ar) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative --all";
+          sl2 =
+            "log --pretty=format:'%h %ad | %s%d [%an]' --graph --date=short";
           ss = "show --stat";
           st = "status";
         };
-        ignores = [
-          "#*#"
-          "*~"
-        ];
+        ignores = [ "#*#" "*~" ];
         extraConfig = {
           core.editor = "$EDITOR";
           merge = {
             conflictstyle = "diff3";
             stat = true;
           };
+          push.default = "current";
         };
       };
       programs.ssh = {
