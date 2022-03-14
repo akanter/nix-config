@@ -16,8 +16,10 @@ in {
     pkgs.emacs
     pkgs.eternal-terminal
     pkgs.gitAndTools.gitFull
+    pkgs.lftp
     pkgs.nixfmt
     pkgs.nix-prefetch
+    pkgs.poetry
   ];
 
   programs.tmux.enable = true;
@@ -123,7 +125,10 @@ in {
           src = powerlevel10k;
         }];
       };
-      home.file.".p10k.zsh".source = "${./conf/.p10k.zsh}";
+      home.file = {
+        ".p10k.zsh".source = "${./conf/.p10k.zsh}";
+        ".lftprc".source = "${./conf/.lftprc}";
+      };
       home.activation.setCocoaKeybindings =
         lib.hm.dag.entryAfter [ "writeBoundary" ] ''
           $VERBOSE_ECHO "Configuring keybindings for the Cocoa Text System"
@@ -155,7 +160,7 @@ in {
           ss = "show --stat";
           st = "status";
         };
-        ignores = [ "#*#" "*~" ];
+        ignores = [ "#*#" "*~" ".idea" ];
         extraConfig = {
           core.editor = "$EDITOR";
           merge = {
