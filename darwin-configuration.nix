@@ -65,6 +65,7 @@ in {
       "swinsian"
       "time-out"
       "whatsapp"
+      "xld"
     ];
   };
 
