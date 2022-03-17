@@ -66,6 +66,7 @@ in {
       "time-out"
       "whatsapp"
       "xld"
+      "zoom"
     ];
   };
 
