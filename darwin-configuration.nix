@@ -113,6 +113,7 @@ in {
         enable = true;
         history.size = 50000;
         shellAliases = {
+          bd = "${pkgs.black}/bin/blackd > /dev/null 2>&1 &";
           ec = "${pkgs.emacs}/bin/emacsclient -ct";
           g = "${pkgs.git}/bin/git";
           gco = "g checkout";
