@@ -14,13 +14,17 @@ in {
   # $ nix-env -qaP | grep wget
   environment.systemPackages = [
     pkgs.black
+    pkgs.colima
+    pkgs.docker
+    pkgs.docker-compose
     pkgs.emacs
     pkgs.eternal-terminal
     pkgs.gitAndTools.gitFull
     pkgs.lftp
-    pkgs.nixfmt
+    pkgs.nixfmt-classic
     pkgs.nix-prefetch
     pkgs.poetry
+    pkgs.keepassxc
   ];
 
   programs.tmux.enable = true;
@@ -31,8 +35,9 @@ in {
 
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;
-  # nix.package = pkgs.nix;
+  nix.package = pkgs.nix;
 
+  security.pam.enableSudoTouchIdAuth = true;
   users = {
     users.ak = {
       home = "/Users/ak";
@@ -42,19 +47,27 @@ in {
 
   homebrew = {
     enable = true;
-    autoUpdate = true;
-    cleanup = "zap";
-    taps = [ "homebrew/cask" ];
+    onActivation = {
+      cleanup = "zap";
+      autoUpdate = true;
+      upgrade = true;
+    };
     casks = [
+      "airtable"
       "brave-browser"
+      "calibre"
       "clipy"
+      "discord"
       "disk-inventory-x"
       "dropbox"
       "flux"
       "iina"
-      "iterm2"
-      "keepassxc"
+      "Iterm2"
       "keka"
+      "keepassxc"
+      "kid3"
+      "kindle-previewer"
+      "lulu"
       "messenger"
       "nextcloud"
       "pycharm-ce"
@@ -80,7 +93,7 @@ in {
     };
   };
 
-  nix.trustedUsers = [ "ak" "@admin" ];
+  nix.settings.trusted-users = [ "ak" "@admin" ];
 
   services.emacs = {
     enable = true;
@@ -95,6 +108,7 @@ in {
   home-manager = {
     useGlobalPkgs = true;
     users.ak = { pkgs, lib, ... }: {
+      home.stateVersion = "24.05";
       programs.home-manager.enable = true;
       programs.emacs = {
         enable = true;
@@ -123,6 +137,7 @@ in {
           enable = true;
           prompt.theme = "powerlevel10k";
           tmux.itermIntegration = true;
+          ssh.identities = [ "id_rsa" ];
         };
         plugins = [{
           name = "powerlevel10k";
@@ -130,8 +145,8 @@ in {
         }];
       };
       home.file = {
-        ".p10k.zsh".source = "${./conf/.p10k.zsh}";
-        ".lftprc".source = "${./conf/.lftprc}";
+        ".p10k.zsh".source = ./conf/.p10k.zsh;
+        ".lftprc".source = ./conf/.lftprc;
       };
       home.activation.setCocoaKeybindings =
         lib.hm.dag.entryAfter [ "writeBoundary" ] ''
@@ -176,14 +191,16 @@ in {
       };
       programs.ssh = {
         enable = true;
+        controlMaster = "auto";
+        controlPersist = "10m";
         matchBlocks = {
           alkanter_gmail = {
             host = "*";
             identityFile = "~/.ssh/id_rsa";
             extraOptions = {
+              IgnoreUnknown = "AddKeysToAgent,UseKeychain";
               UseKeychain = "yes";
               AddKeysToAgent = "yes";
-              IgnoreUnknown = "UseKeychain";
             };
           };
         };
@@ -203,7 +220,7 @@ in {
         _HIHideMenuBar = false;
         # "com.apple.keyboard.fnState" = true;
         "com.apple.mouse.tapBehavior" = 1;
-        "com.apple.sound.beep.volume" = "0.0";
+        "com.apple.sound.beep.volume" = 0.0;
         "com.apple.sound.beep.feedback" = 0;
         "com.apple.swipescrolldirection" = false;
       };
@@ -226,8 +243,5 @@ in {
       remapCapsLockToControl = true;
     };
   };
-  fonts = {
-    enableFontDir = true;
-    fonts = [ pkgs.meslo-lgs-nf ];
-  };
+  fonts = { packages = [ pkgs.meslo-lgs-nf ]; };
 }
