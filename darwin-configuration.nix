@@ -24,7 +24,6 @@ in {
     pkgs.nixfmt-classic
     pkgs.nix-prefetch
     pkgs.poetry
-    pkgs.keepassxc
   ];
 
   programs.tmux.enable = true;
@@ -159,6 +158,21 @@ in {
       home.sessionVariables = {
         EDITOR = "${pkgs.emacs}/bin/emacsclient -ct";
         VISUAL = "$EDITOR";
+      };
+      programs.vscode = {
+        enable = true;
+        extensions = with pkgs;[
+          vscode-extensions.bbenoist.nix
+          vscode-extensions.betterthantomorrow.calva
+          vscode-extensions.tuttieee.emacs-mcx
+          vscode-extensions.continue.continue
+          vscode-extensions.ms-python.debugpy
+          vscode-extensions.ms-python.flake8
+          vscode-extensions.ms-python.vscode-pylance
+          vscode-extensions.ms-python.python
+          vscode-extensions.ms-vscode-remote.remote-ssh
+          vscode-extensions.ms-vscode-remote.remote-ssh-edit
+        ];
       };
       programs.git = {
         enable = true;
